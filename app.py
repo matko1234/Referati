@@ -197,7 +197,7 @@ st.title("Generator školskog referata")
 
 st.header("1. Osnovni podaci")
 naslov = st.text_input("Naslov referata")
-predmet = st.text_input("Naziv predmeta")
+predmet = st.text_input("Referat iz...")
 mentor = st.text_input("Ime i prezime mentora")
 ucenici = st.text_input("Ime i prezime učenika")
 razred = st.text_input("Razred")
