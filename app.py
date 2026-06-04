@@ -176,11 +176,11 @@ st.title("Generator školskog referata")
 
 st.header("1. Osnovni podaci")
 naslov = st.text_input("Naslov referata")
-predmet = st.text_input("Naziv predmeta (npr. povijesti)")
+predmet = st.text_input("Referat iz...")
 mentor = st.text_input("Ime i prezime mentora (titula prof. se dodaje automatski)")
 ucenici = st.text_input("Ime i prezime učenika")
-razred = st.text_input("Razred (npr. 3.a)")
-datum = st.text_input("Datum (npr. 3. rujna 2018.)")
+razred = st.text_input("Razred")
+datum = st.text_input("Datum")
 
 st.header("2. Izborne opcije")
 
@@ -195,7 +195,7 @@ st.subheader("Slikovni prilozi i Tablice")
 st.write("Ovdje možete dodati grafove, slike ili tablice uparene s tekstom koje će se pravilno formatirati na kraju rada.")
 
 tip_priloga = st.selectbox("Odaberi tip priloga:", ["Slika/Graf", "Tablica"])
-naziv_priloga = st.text_input("Naziv/Naslov priloga (npr. Grafički prikaz... ili Broj učenika...)")
+naziv_priloga = st.text_input("Naziv/Naslov priloga")
 tekst_priloga = st.text_area("Unesi tekst iz referata koji se odnosi na ovaj prilog (objašnjenje/analiza):")
 izvor_priloga = st.text_input("Izvor priloga (ostavi prazno ako je tvoj vlastiti rad)")
 ucitana_slika = st.file_uploader("Učitaj slikovni prikaz priloga (PNG, JPG, JPEG):", type=["png", "jpg", "jpeg"])
@@ -226,17 +226,17 @@ tip_izvora = st.selectbox("Odaberi vrstu izvora za unos:", ["Knjiga", "Web stran
 
 col1, col2 = st.columns(2)
 with col1:
-    autor = st.text_input("Autor (Prezime, Ime ili dr.)")
+    autor = st.text_input("Autor (Prezime, Ime)")
     godina = st.text_input("Godina izdanja")
     naslov_izvora = st.text_input("Naslov djela/članka")
 
 with col2:
     if tip_izvora == "Knjiga":
-        izdavac = st.text_input("Izdavač (npr. Školska knjiga)")
-        grad = st.text_input("Mjesto izdanja (npr. Zagreb)")
+        izdavac = st.text_input("Izdava")
+        grad = st.text_input("Mjesto izdanja")
     else:
         url = st.text_input("URL (poveznica)")
-        datum_pristupa = st.text_input("Datum pristupa (npr. 31. kolovoza 2018.)")
+        datum_pristupa = st.text_input("Datum pristupa")
 
 if st.button("➕ Dodaj izvor u literaturu"):
     if tip_izvora == "Knjiga" and autor and naslov_izvora:
