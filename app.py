@@ -4,26 +4,50 @@ from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import io
 
-# Inicijalizacija memorije za literaturu
 if "literatura" not in st.session_state:
     st.session_state.literatura = []
 
 def kreiraj_referat(naslov, predmet, mentor, ucenici, razred, datum, podnaslovi):
     doc = Document()
 
+    # Postavljanje zadanog fonta za cijeli dokument na Times New Roman, 12pt
+    style = doc.styles['Normal']
+    font = style.font
+    font.name = 'Times New Roman'
+    font.size = Pt(12)
+
     # --- 1. NASLOVNICA ---
+    # Gimnazija Karlovac
     p_header = doc.add_paragraph()
     p_header.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_header.add_run("Gimnazija Karlovac\n\n\n\n\n\n\n")
+    run_header = p_header.add_run("Gimnazija Karlovac")
+    run_header.font.size = Pt(14)
 
-    run_naslov = p_header.add_run(f"{naslov.upper()}\n")
+    # Razmak do naslova
+    for _ in range(7): doc.add_paragraph()
+
+    # Naslov teme i predmet
+    p_title = doc.add_paragraph()
+    p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run_naslov = p_title.add_run(f"{naslov.upper()}\n")
     run_naslov.bold = True
     run_naslov.font.size = Pt(16)
-    p_header.add_run(f"Referat iz {predmet}\n\n\n\n\n\n\n\n\n")
+    
+    run_predmet = p_title.add_run(f"Referat iz {predmet}")
+    run_predmet.font.size = Pt(14)
+
+    # Razmak do podataka o mentoru i učeniku
+    for _ in range(8): doc.add_paragraph()
+
+    # Automatsko dodavanje "prof." ako već nije upisano
+    mentor_sufix = mentor if "prof." in mentor.lower() else f"{mentor}, prof."
 
     p_info = doc.add_paragraph()
-    p_info.add_run(f"Mentor/ica:",{mentor},", prof."\n")
-    p_info.add_run(f"Učenik/ca: {ucenici}, {razred}\n\n\n\n\n\n")
+    p_info.add_run(f"Mentor/ica: {mentor_sufix}\n")
+    p_info.add_run(f"Učenik/ca: {ucenici}, {razred}")
+
+    # Razmak do dna stranice
+    for _ in range(6): doc.add_paragraph()
 
     p_footer = doc.add_paragraph()
     p_footer.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -51,13 +75,11 @@ def kreiraj_referat(naslov, predmet, mentor, ucenici, razred, datum, podnaslovi)
     doc.add_heading("Popis literature i izvora", level=1)
     
     if st.session_state.literatura:
-        # Abecedno sortiranje izvora na kraju rada
         for izvor in sorted(st.session_state.literatura):
             doc.add_paragraph(izvor)
     else:
         doc.add_paragraph("(Učenik nije unio literaturu u aplikaciji.)")
 
-    # Spremanje u memoriju
     bio = io.BytesIO()
     doc.save(bio)
     bio.seek(0)
@@ -69,9 +91,9 @@ st.title("Generator školskog referata")
 st.header("1. Osnovni podaci")
 naslov = st.text_input("Naslov referata")
 predmet = st.text_input("Referat iz...")
-mentor = st.text_input("Ime i prezime mentora")
+mentor = st.text_input("Ime i prezime mentora (titula prof. dodaje se automatski)")
 ucenici = st.text_input("Ime i prezime učenika")
-razred = st.text_input("Razred")
+razred = st.text_input("Razred)")
 datum = st.text_input("Datum")
 
 st.header("2. Izborne opcije")
@@ -101,12 +123,10 @@ with col2:
 
 if st.button("➕ Dodaj izvor u literaturu"):
     if tip_izvora == "Knjiga" and autor and naslov_izvora:
-        # Formatiranje knjige
         izvor_str = f"{autor}. {godina + '. ' if godina else ''}{naslov_izvora}. {izdavac}. {grad}."
         st.session_state.literatura.append(izvor_str)
         st.success("Knjiga je dodana!")
     elif tip_izvora == "Web stranica" and naslov_izvora and url:
-        # Formatiranje web stranice
         godina_str = f"{godina}. " if godina else ""
         izvor_str = f"{autor}. {godina_str}{naslov_izvora}. Preuzeto s {url} (pristupljeno {datum_pristupa})."
         st.session_state.literatura.append(izvor_str)
@@ -114,7 +134,6 @@ if st.button("➕ Dodaj izvor u literaturu"):
     else:
         st.error("Molimo ispuni barem Autora i Naslov.")
 
-# Prikaz dodane literature
 if st.session_state.literatura:
     st.write("**Trenutno dodani izvori (bit će automatski sortirani abecedno):**")
     for lit in st.session_state.literatura:
@@ -126,7 +145,6 @@ if st.session_state.literatura:
 
 st.divider()
 
-# Gumb za generiranje
 if st.button("Pripremi dokument"):
     if naslov and predmet and ucenici:
         word_file = kreiraj_referat(naslov, predmet, mentor, ucenici, razred, datum, podnaslovi_input)
