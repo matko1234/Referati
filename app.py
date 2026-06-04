@@ -22,7 +22,7 @@ def kreiraj_referat(naslov, predmet, mentor, ucenici, razred, datum, podnaslovi)
     p_header.add_run(f"Referat iz {predmet}\n\n\n\n\n\n\n\n\n")
 
     p_info = doc.add_paragraph()
-    p_info.add_run(f"Mentor/ica: {mentor}\n")
+    p_info.add_run(f"Mentor/ica:",{mentor},", prof."\n")
     p_info.add_run(f"Učenik/ca: {ucenici}, {razred}\n\n\n\n\n\n")
 
     p_footer = doc.add_paragraph()
@@ -68,11 +68,11 @@ st.title("Generator školskog referata")
 
 st.header("1. Osnovni podaci")
 naslov = st.text_input("Naslov referata")
-predmet = st.text_input("Naziv predmeta (npr. povijesti)")
-mentor = st.text_input("Ime i prezime mentora (s titulom)")
+predmet = st.text_input("Referat iz...")
+mentor = st.text_input("Ime i prezime mentora")
 ucenici = st.text_input("Ime i prezime učenika")
-razred = st.text_input("Razred (npr. 3.a)")
-datum = st.text_input("Datum (npr. 3. rujna 2018.)")
+razred = st.text_input("Razred")
+datum = st.text_input("Datum")
 
 st.header("2. Izborne opcije")
 
@@ -87,17 +87,17 @@ tip_izvora = st.selectbox("Odaberi vrstu izvora za unos:", ["Knjiga", "Web stran
 
 col1, col2 = st.columns(2)
 with col1:
-    autor = st.text_input("Autor (Prezime, Ime ili dr.)")
+    autor = st.text_input("Autor (Prezime, Ime)")
     godina = st.text_input("Godina izdanja")
     naslov_izvora = st.text_input("Naslov djela/članka")
 
 with col2:
     if tip_izvora == "Knjiga":
-        izdavac = st.text_input("Izdavač (npr. Školska knjiga)")
-        grad = st.text_input("Mjesto izdanja (npr. Zagreb)")
+        izdavac = st.text_input("Izdavač")
+        grad = st.text_input("Mjesto izdanja")
     else:
         url = st.text_input("URL (poveznica)")
-        datum_pristupa = st.text_input("Datum pristupa (npr. 31. kolovoza 2018.)")
+        datum_pristupa = st.text_input("Datum pristupa")
 
 if st.button("➕ Dodaj izvor u literaturu"):
     if tip_izvora == "Knjiga" and autor and naslov_izvora:
